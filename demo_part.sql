@@ -2,7 +2,7 @@
 /* 
  demo_part.sql: demonstrate use of partitions.
 
-story to tell in ppt :
+Story to tell in ppt :
  - partitioning limited use
  - always + only needs local-indexes.
  - best use case is to prevent redo on delete (demo with 2x16M redo/WALs, but reality: gb/sec)
