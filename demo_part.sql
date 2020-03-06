@@ -1,6 +1,6 @@
 
 /* 
- demo_part.sql: demonstrate use of partitions.
+ Demo_part.sql: Demonstrate use of partitions.
 
 Story to tell in ppt :
  - partitioning limited use
