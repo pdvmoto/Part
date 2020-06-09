@@ -1,14 +1,23 @@
 
 /* 
- Demo_part.sql: Demonstrate use of partitions.
+ demo_part.sql: demonstrate use of partitions.
 
-Story to tell in ppt :
+story to tell in ppt :
  - partitioning limited use
  - always + only needs local-indexes.
  - best use case is to prevent redo on delete (demo with 2x16M redo/WALs, but reality: gb/sec)
+ - pitfall: global index when drop-partition
+ - positive: scanning 1 or few partitions to get your (aggregated) result.
+ - pitfall: scanning of multiple local_indexes to find a (small) target.
+
+
 
  - case 1:
  - delete data versus drop-partition.. effort is much less.
+
+ - case 1a: 
+ - drop partition with global index: see the extra time+effort
+
 
  - case 2:
  - find 1 record, use index..
@@ -25,7 +34,7 @@ Story to tell in ppt :
  - subpartition-hash, for pq, limited usage
 
  - anecdote: status=current, most recrds in last partition, but 
-    => globa index.. ai..
+    => global index.. ai..
     => local index.. still ai.
     => local index + where - clause.. only good solution.
 
@@ -77,13 +86,14 @@ connect by rownum < 10 )
 select * from series ; 
 
 using YYYY DDD HH24MISS 
+for   2020 366 23:59:59
 we end up wth a ridiculous high nr ? 2 Trillion ? 
 2.019.294.175.716
 
 add to that 6 digit for Seq, and .. 25 digit precision, just inside oracle..
 
 ....,....1....,....2....,
-2.019.294.175.716.000.000
+2.020.366.235.959.000.000
 
 assume: 1000 rec/sec -> 100M / day
 
@@ -112,6 +122,14 @@ but 16 digits is still only half of a GUID
 
 Q: 
  - what if we put Day as interger, and intra-day as fraction behind dec-sep.?
+
+
+Research Topics for Audience
+ - would an artificial key on date-nr work ? YYY DDD HHMIDD + seq, avoid Global IDX.
+ - what about ultra small partitions ? Compressed ?
+ - any practical experience with mixed internal/external partitions ? 
+ - 
+ - 
 
 
 create replace table pt2
