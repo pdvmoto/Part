@@ -49,9 +49,9 @@ commit ;
 
 ***/ 
 
----
-prompt we did some heavy stuff, now collect+show stats.. 
----
+-- -
+-- prompt Did some heavy stuff, now collect+show stats since... 
+-- -
 
 set feedback off
 
@@ -106,7 +106,7 @@ and ls.diff <> 0
 and n.name in ( &THE_STATNAME )
 order by audsid, stat;
 
-accept hit_enter prompt 'Note the stats, and the redo, Hit Enter to Continue...'
+accept hit_enter prompt 'Note the redo, Hit Enter to Continue...'
 
 -- note: 
 -- most data is "counters" there is no "timing" information,

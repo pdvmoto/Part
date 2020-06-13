@@ -1,0 +1,4 @@
+
+set sqlprompt "SCOTT @ ORCLPDB1  > "                                            
+
+host title "SCOTT @ ORCLPDB1  > "                                               

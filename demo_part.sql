@@ -6,18 +6,21 @@ story to tell in ppt :
  - partitioning limited use
  - always + only needs local-indexes.
  - best use case is to prevent redo on delete (demo with 2x16M redo/WALs, but reality: gb/sec)
- - pitfall: global index when drop-partition
+ - pitfall: global index when drop-partition (demo?)
  - positive: scanning 1 or few partitions to get your (aggregated) result.
  - pitfall: scanning of multiple local_indexes to find a (small) target.
 
 
+ - re-test against 18.x and 12.1.
 
  - case 1:
- - delete data versus drop-partition.. effort is much less.
+ - delete data versus drop-partition.. effort is much less. demo_0
 
  - case 1a: 
  - drop partition with global index: see the extra time+effort
 
+ - case 1b: 
+ - delete data from non-partitioned table.. how much redo?
 
  - case 2:
  - find 1 record, use index..
@@ -252,6 +255,11 @@ column hv format 999999 head High_val
 select table_name, partition_name part_name, num_rows 
 from user_tab_partitions
 where table_name like 'PT%'
+order by table_name, partition_name ; 
+
+select table_name, partition_name part_name, num_rows 
+from user_tab_partitions
+where table_name like 'T%'
 order by table_name, partition_name ; 
 
 /*
