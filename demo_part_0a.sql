@@ -2,6 +2,8 @@
 
 -- delete records versus drop partition, global/local index..
 -- since 12.x: Effort for update-global-indexes still there, but moved to background 
+--  
+-- Do NOT USE... incomplete demo, index-maintenance not "counted in session" 
 
 
 set echo off
@@ -45,7 +47,9 @@ accept hit_enter prompt 'Hit Enter to Continue...'
 set timing on
 set echo on
 
-alter table pt drop partition pt_3 update global indexes ; 
+alter table pt drop partition pt_3 ; 
+
+alter index pt_gi_pay rebuild /* force the maintenance in this session */ ;
 
 set echo off
 set autotrace off
@@ -53,7 +57,10 @@ set timing off
 set feedback off
 
 prompt .
-prompt Dropped 1 partition, 10K rows, now how much redo...? 
+prompt Dropped 1 partition, 10K rows, and rebuilt the index, how much redo...? 
+prompt .
+prompt Future demo: show unusable-idex, 
+prompt and explain maintenance by SYS.PMO_DEFERRED_GIDX_MAINT_JOB
 prompt .
 
 @show_redo
@@ -101,12 +108,11 @@ set feedback off
 clear screen
 
 prompt .
-prompt Now We have seen effect of a local index on partition operation: 
-prompt - delete 10K records from Conventional table;              13   M redo.
-prompt - delete 10K records from Partitioned table, 1 partition;  15   M redo.
-prompt - remove 1 Partition with 10K records;                     0.01 M redo..
+prompt Now We have seen effect of global vs local index on partition operation: 
+prompt - drop partition, 10K records with global index,          13    M redo.
+prompt - drop partition, 10K records with only local indexes,     0.04 M redo.
 prompt .
-prompt Bonus Question (homework!) will redo increase dropping Large Partition ? 
+prompt Bonus Question (homework!) how + which background process... ? 
 prompt .
 
 accept hit_enter prompt 'Hit Enter to Continue...'
@@ -117,7 +123,7 @@ prompt .
 prompt When you do this with Real Volumes of data, 
 prompt the difference in effort and in time is noticable.
 prompt .
-prompt This is it; Best Use of Partitioning (imho)
+prompt Best: Avoid Global Indexes, Please.
 prompt .
 prompt back to ppt...
 prompt .
