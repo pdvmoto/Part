@@ -12,7 +12,7 @@ prompt Resetting stats for measuring redo..
 prompt (the nr you see is the redo from previous activity, if any)
 prompt .
 
-@show_redo 
+@show_redo_reset
 
 clear screen
 
@@ -55,7 +55,7 @@ prompt .
 prompt Partitioned table, how much redo...?
 prompt .
 
-@show_redo 
+@show_redo
 
 set timing on
 set autotrace on stat
@@ -85,7 +85,7 @@ prompt .
 prompt We have seen: 
 prompt - delete 10K records from Conventional table;              13   M redo.
 prompt - delete 10K records from Partitioned table, 1 partition;  15   M redo.
-prompt - remove 1 Partition with 10K records;                     0.01 M redo..
+prompt - remove 1 Partition with 10K records;                     0.02 M redo..
 prompt .
 prompt Bonus Question (homework!) will redo increase dropping Large Partition ? 
 prompt .
@@ -94,11 +94,22 @@ accept hit_enter prompt 'Hit Enter to Continue...'
 
 clear screen 
 
-prompt .
+prompt
+prompt
+Prompt Voila!
+prompt  
+prompt Main Point Made.
+prompt 
+prompt 
 prompt When you do this with Real Volumes of data, 
 prompt the difference in effort and in time is noticable.
-prompt .
+prompt 
+prompt Removing data with "drop partition" Saves ...
+prompt - Saves Redo-effort (logwriter, archiving, standby...)
+prompt - Saves Time! 
+prompt 
 prompt This is it; Best Use of Partitioning (imho)
-prompt .
+prompt 
+prompt 
 prompt back to ppt...
 prompt .

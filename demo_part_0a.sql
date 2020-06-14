@@ -3,8 +3,12 @@
 -- delete records versus drop partition, global/local index..
 -- since 12.x: Effort for update-global-indexes still there, but moved to background 
 --  
--- Do NOT USE... incomplete demo, index-maintenance not "counted in session" 
+-- only use as extra... incomplete demo, index-maintenance not "counted in session" 
 
+-- 
+--  ppt needed : partitioned-table + global index + local index... 
+--  explain removal of partition, and effect on global indes (pointers)
+-- 
 
 set echo off
 set autotrace off
@@ -24,7 +28,7 @@ prompt .
 set feedback on
 set echo on
 
-create index pt_gi_pay on pt ( payload, dt, active, id) GLOBAL ;
+create index pt_gi_pay on pt ( payload) GLOBAL ;
 
 set echo off
 
@@ -35,16 +39,16 @@ prompt Resetting stats for measuring redo..
 prompt (the nr you see is the redo from previous activity, if any)
 prompt .
 
-@show_redo 
+@show_redo_reset
 
 clear screen
 
 prompt .
-prompt stats are reset, ready to drop some partitions and measure redo.
+prompt Redo-stats are reset, ready to drop partition and measure redo.
 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
-set timing on
+set autotrace on stat
 set echo on
 
 alter table pt drop partition pt_3 ; 
@@ -53,14 +57,13 @@ alter index pt_gi_pay rebuild /* force the maintenance in this session */ ;
 
 set echo off
 set autotrace off
-set timing off
 set feedback off
 
 prompt .
 prompt Dropped 1 partition, 10K rows, and rebuilt the index, how much redo...? 
 prompt .
-prompt Future demo: show unusable-idex, 
-prompt and explain maintenance by SYS.PMO_DEFERRED_GIDX_MAINT_JOB
+prompt [ Future demo: show unusable-idex, 
+prompt   and explain maintenance by SYS.PMO_DEFERRED_GIDX_MAINT_JOB ] 
 prompt .
 
 @show_redo
@@ -73,7 +76,7 @@ set feedback on
 set echo on
 
 drop   index pt_gi_pay ;
-create index pt_li_pay on pt ( payload, dt, active, id) LOCAL ;
+create index pt_li_pay on pt ( payload) LOCAL ;
 
 set echo off
 set feedback on
@@ -82,13 +85,12 @@ prompt .
 prompt Reset statistics for measuring (notice the redo from index-creation)
 promp . 
 
-@show_redo
+@show_redo_reset
 
 clear screen
 
 set echo on
 set feedback on
-set timing on
 
 prompt .
 prompt now remove the partition with only Local Indexes
@@ -103,12 +105,10 @@ set feedback off
 
 @show_redo
 
-
-
 clear screen
 
 prompt .
-prompt Now We have seen effect of global vs local index on partition operation: 
+prompt We have seen effect of Global vs Local index on partition operation: 
 prompt - drop partition, 10K records with global index,          13    M redo.
 prompt - drop partition, 10K records with only local indexes,     0.04 M redo.
 prompt .

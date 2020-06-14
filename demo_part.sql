@@ -154,8 +154,12 @@ prompt .
 -- will create 5 partitions, 2 named and 2 sys-named partitions
 -- 
 
+-- easier to read.
+set sqlprompt "SQL> " 
+
 -- two tables, partitioned and conventional, for comparison
 -- also consider: base-table with data-set for re-deployments
+
 drop table pt ; 
 drop table  t ; 
 
@@ -177,7 +181,9 @@ partition by range ( id )  interval ( 10000 )
   , partition pt_3 values less than ( 30000 ) 
   , partition pt_4 values less than ( 40000 ) 
   , partition pt_5 values less than ( 50000 ) 
-  , partition pt_6 values less than ( 60000 ) ) ;
+  , partition pt_6 values less than ( 60000 ) 
+  , partition pt_7 values less than ( 70000 )
+  , partition pt_8 values less than ( 80000 ) ) ;
 
 set echo off
 
@@ -203,23 +209,24 @@ create unique index t_pk on  t ( id ) ;
 alter table t add constraint t_pk primary key ( id ) ;
 
 
--- 60K records, nice number for timing, effort, demo.. 
+-- 80K records, nice number for timing, effort, demo.. 
 set timing on
 
 set echo on
 set feedback on
 set timing on
 
--- fill with deliberately funny, compressiable data
+-- fill with deliberately funny, compressible data
 insert into pt
-select trunc ( rownum -1)                        -- sequene...
-,  decode ( mod ( rownum, 10000), 0, 'Y', 'N' )  -- every 1/1000 active=Y
-,  mod ( rownum-1, 10000 ) / 100                 -- 0-100, two decimals
-,  (sysdate - rownum )                         -- some date
-,  rpad ( to_char (to_date ( trunc ( rownum ), 'J'), 'JSP' ), 198)
-,  rpad ( ' ', 750 ) 
+select 
+   trunc ( rownum -1)                               -- sequene...
+,  decode ( mod ( rownum, 10000), 0, 'Y', 'N' )     -- every 1/1000 active=Y
+,  mod ( rownum-1, 10000 ) / 100                    -- 0-100, two decimals
+,  (sysdate - rownum )                              -- some dates
+,  rpad ( to_char (to_date ( trunc ( rownum ), 'J'), 'JSP' ), 198) -- words
+,  rpad ( ' ', 750 )                                -- blanks
 from dual
-connect by rownum <= 60000 ;
+connect by rownum <= 80000 ;
 
 commit ; 
 
@@ -247,15 +254,19 @@ from user_tab_partitions
 where table_name like 'PT%'
 order by table_name, partition_name ; 
 
-select table_name, num_rows 
+select table_name, '-' as part_name, num_rows 
 from user_tables
 where table_name like 'T'
 order by table_name ; 
 
-prompt .
+prompt 
+prompt 
 prompt Check: 
-prompt We have tables T (conventional) and PT (6 partitions).
-prompt With 60000 rows each.
-prompt .
+prompt 
+prompt We have two tables 
+prompt T    (conventional, all records in 1 table-segment) 
+prompt PT   (partitioned), with partitions of 10K records each.
+prompt 
+prompt 
 
 
