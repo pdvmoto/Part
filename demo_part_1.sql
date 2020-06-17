@@ -10,9 +10,12 @@
 
 */
 
+column active format A10 heading ACTIVE_YN
+
 set echo off
 
-alter session set optimizer_mode = first_rows;
+alter session set optimizer_mode = first_rows_1;
+alter session set optimizer_mode = first_rows_1;
 
 drop index pt_li_a ;
 drop index pt_gi_a ;
@@ -44,7 +47,7 @@ prompt
 set autotrace on explain
 set echo on
 
-select id, active, amount from pt where active = 'Y' ; 
+select id, active from pt where active = 'Y' ; 
 
 set echo off
 prompt 
@@ -85,7 +88,7 @@ prompt
 set autotrace on explain
 set echo on
 
-select id, active, amount from pt where active = 'Y' ; 
+select id, active from pt where active = 'Y' ; 
 
 set echo off
 prompt

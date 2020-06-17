@@ -179,11 +179,7 @@ partition by range ( id )  interval ( 10000 )
 (   partition pt_1 values less than ( 10000 )  
   , partition pt_2 values less than ( 20000 ) 
   , partition pt_3 values less than ( 30000 ) 
-  , partition pt_4 values less than ( 40000 ) 
-  , partition pt_5 values less than ( 50000 ) 
-  , partition pt_6 values less than ( 60000 ) 
-  , partition pt_7 values less than ( 70000 )
-  , partition pt_8 values less than ( 80000 ) ) ;
+  , partition pt_4 values less than ( 40000 ) ) ;
 
 set echo off
 
@@ -209,14 +205,16 @@ create unique index t_pk on  t ( id ) ;
 alter table t add constraint t_pk primary key ( id ) ;
 
 
--- 80K records, nice number for timing, effort, demo.. 
+-- 40K records, nice number for timing, effort, demo.. 
 set timing on
 
-set echo on
 set feedback on
 set timing on
+set echo on
 
+--
 -- fill with deliberately funny, compressible data
+--
 insert into pt
 select 
    trunc ( rownum -1)                               -- sequene...
@@ -226,17 +224,22 @@ select
 ,  rpad ( to_char (to_date ( trunc ( rownum ), 'J'), 'JSP' ), 198) -- words
 ,  rpad ( ' ', 750 )                                -- blanks
 from dual
-connect by rownum <= 80000 ;
-
-commit ; 
-
--- and copy into conventional table, keep it there.
-insert into t select * from pt ;
-
-commit ;
+connect by rownum <= 40000 ;
 
 set echo off
 set timing off
+
+commit ; 
+
+set echo on
+
+--
+-- and copy into conventional table, keep it there.
+--
+insert into t select * from pt ;
+
+set echo off
+commit ;
 
 set echo on
 

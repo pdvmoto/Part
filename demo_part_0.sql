@@ -17,7 +17,9 @@ prompt .
 clear screen
 
 prompt .
-prompt stats are reset, ready to delete some data and measure redo.
+prompt [ the ppt has shown what we will do : delete-T, delete-PT, and Drop-P. ]
+prompt .
+prompt Ready to demonstrate and measure redo.
 prompt .
 
 accept hit_enter prompt 'Hit Enter to Continue...'
@@ -62,18 +64,18 @@ set autotrace on stat
 set feedback on
 set echo on
 
-alter table pt drop partition pt_2 ;
+alter table pt DROP PARTITION pt_2 ;
 
 set echo off
 set timing off
 set autotrace off
 set feedback off
 
-prompt .
-prompt Drop a Partition, how much redo...?
-prompt .
+prompt  
+prompt Dropped a Partition, how much redo...?
+prompt  
 
-prompt .
+prompt  
 
 @show_redo
 
@@ -83,9 +85,9 @@ clear screen
 
 prompt .
 prompt We have seen: 
-prompt - delete 10K records from Conventional table;              13   M redo.
-prompt - delete 10K records from Partitioned table, 1 partition;  15   M redo.
-prompt - remove 1 Partition with 10K records;                     0.02 M redo..
+prompt - delete 10K records from Conventional table;             13000 K redo.
+prompt - delete 10K records from Partitioned table, 1 partition; 15000 K redo.
+prompt - remove 1 Partition with 10K records;                     0.02 K redo..
 prompt .
 prompt Bonus Question (homework!) will redo increase dropping Large Partition ? 
 prompt .

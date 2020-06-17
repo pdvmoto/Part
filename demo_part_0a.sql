@@ -28,30 +28,30 @@ prompt .
 set feedback on
 set echo on
 
-create index pt_gi_pay on pt ( payload) GLOBAL ;
+create index pt_gi_pay on pt ( payload, filler, amount) GLOBAL ;
 
 set echo off
 
-accept hit_enter prompt 'Hit Enter to Continue...'
+-- accept hit_enter prompt 'Hit Enter to Continue...'
 
-prompt .
-prompt Resetting stats for measuring redo..
-prompt (the nr you see is the redo from previous activity, if any)
-prompt .
+-- prompt .
+-- prompt Resetting stats for measuring redo..
+-- prompt (the nr you see is the redo from previous activity, if any)
+-- prompt .
 
 @show_redo_reset
 
-clear screen
+-- clear screen
 
-prompt .
-prompt Redo-stats are reset, ready to drop partition and measure redo.
-
+prompt 
+prompt Ready to drop partition and measure redo.
+prompt 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
-set autotrace on stat
+set feedb on
 set echo on
 
-alter table pt drop partition pt_3 ; 
+alter table pt drop partition pt_1 ; 
 
 alter index pt_gi_pay rebuild /* force the maintenance in this session */ ;
 
@@ -68,22 +68,22 @@ prompt .
 
 @show_redo
 
-prompt .   
+prompt     
 prompt Now replace with a local index.
-prompt .
+prompt  
 
 set feedback on
 set echo on
 
 drop   index pt_gi_pay ;
-create index pt_li_pay on pt ( payload) LOCAL ;
+create index pt_li_pay on pt ( payload, filler, amount) LOCAL ;
 
 set echo off
 set feedback on
 
-prompt .
+prompt  
 prompt Reset statistics for measuring (notice the redo from index-creation)
-promp . 
+promp   
 
 @show_redo_reset
 
@@ -96,7 +96,7 @@ prompt .
 prompt now remove the partition with only Local Indexes
 promp . 
 
-alter table pt drop partition pt_4 ;
+alter table pt drop partition pt_2 ;
 
 set echo off
 set timing off
@@ -107,23 +107,28 @@ set feedback off
 
 clear screen
 
-prompt .
+prompt  
 prompt We have seen effect of Global vs Local index on partition operation: 
-prompt - drop partition, 10K records with global index,          13    M redo.
-prompt - drop partition, 10K records with only local indexes,     0.04 M redo.
-prompt .
-prompt Bonus Question (homework!) how + which background process... ? 
-prompt .
+prompt - drop partition, 10K records with global index,          200 K redo.
+prompt - drop partition, 10K records with only local indexes,     30 K redo.
+prompt  
+prompt Bonus Question (homework!) which background process... ? 
+prompt  
 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
 clear screen 
 
-prompt .
-prompt When you do this with Real Volumes of data, 
-prompt the difference in effort and in time is noticable.
-prompt .
+prompt  
+prompt If Possible: Avoid Global Indexes...
+prompt 
+prompt When you do this with Real Volumes of data, and mulitple indexes,
+prompt the difference in effort (and in time) is noticable.
+prompt  
 prompt Best: Avoid Global Indexes, Please.
-prompt .
-prompt back to ppt...
-prompt .
+prompt
+prompt (yes, I know, it gets better, more clever, with every version, 
+prompt but still, Global-Indexes are contrary to partition-operations)
+prompt  
+prompt Back to ppt...
+prompt  
