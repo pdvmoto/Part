@@ -17,7 +17,7 @@ prompt .
 clear screen
 
 prompt .
-prompt [ the ppt has shown what we will do : delete-T, delete-PT, and Drop-P. ]
+prompt [ the ppt has shown what we will do : delete-from-T, delete-from-PT, and Drop-Partition. ]
 prompt .
 prompt Ready to demonstrate and measure redo.
 prompt .
@@ -28,7 +28,7 @@ set timing on
 set autotrace on stat
 set echo on
 
-delete from t where id < 10000;
+DELETE from t where id < 10000;
 
 set echo off
 set autotrace off
@@ -46,7 +46,7 @@ set autotrace on stat
 set feedback on
 set echo on
 
-delete from pt where id < 10000;
+DELETE from pt where id < 10000;
 
 set echo off
 set timing off

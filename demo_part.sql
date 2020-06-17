@@ -51,7 +51,7 @@ extras
  - pk with yyyymmddSSS+sequence
  - locking, how long when delete, how long when drop/exchange..
 
-check:
+Check:
  - on-line operations for partitioning ? 
  - license for partitioning still an issue ? 
  - filtered-partition operations - check+test+demo ?
@@ -234,7 +234,7 @@ commit ;
 set echo on
 
 --
--- and copy into conventional table, keep it there.
+-- and copy into conventional table.
 --
 insert into t select * from pt ;
 
@@ -264,12 +264,11 @@ order by table_name ;
 
 prompt 
 prompt 
-prompt Check: 
+prompt Demo Ready... : 
 prompt 
 prompt We have two tables 
 prompt T    (conventional, all records in 1 table-segment) 
 prompt PT   (partitioned), with partitions of 10K records each.
 prompt 
 prompt 
-
 
