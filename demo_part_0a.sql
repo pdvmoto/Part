@@ -44,14 +44,14 @@ set echo off
 -- clear screen
 
 prompt 
-prompt Ready to drop partition and measure redo.
+prompt Ready to DROP a PARTITION (with GLOBAL INDEX) and measure redo.
 prompt 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
 set feedb on
 set echo on
 
-alter table pt drop partition pt_1 ; 
+alter table pt DROP PARTITION pt_1 ; 
 
 alter index pt_gi_pay rebuild /* force the maintenance in this session */ ;
 
@@ -68,6 +68,8 @@ prompt .
 
 @show_redo
 
+clear screen
+
 prompt     
 prompt Now replace with a local index.
 prompt  
@@ -81,20 +83,21 @@ create index pt_li_pay on pt ( payload, filler, amount) LOCAL ;
 set echo off
 set feedback on
 
-prompt  
-prompt Reset statistics for measuring (notice the redo from index-creation)
-promp   
-
 @show_redo_reset
+
+
+prompt  
+prompt Replaced the Global index with a LOCAL INDEX.
+promp   
+prompt Ready to DROP a PARTITION (with LOCAL INDEX) and measure redo.
+prompt 
+accept hit_enter prompt 'Hit Enter to Continue...'
+
 
 clear screen
 
-set echo on
 set feedback on
-
-prompt .
-prompt now remove the partition with only Local Indexes
-promp . 
+set echo on
 
 alter table pt drop partition pt_2 ;
 
@@ -112,7 +115,7 @@ prompt We have seen effect of Global vs Local index on partition operation:
 prompt - drop partition, 10K records with global index,          200 K redo.
 prompt - drop partition, 10K records with only local indexes,     30 K redo.
 prompt  
-prompt Bonus Question (homework!) which background process... ? 
+prompt Bonus Question (homework!) which background process, and how long... ? 
 prompt  
 
 accept hit_enter prompt 'Hit Enter to Continue...'
@@ -122,13 +125,12 @@ clear screen
 prompt  
 prompt If Possible: Avoid Global Indexes...
 prompt 
-prompt When you do this with Real Volumes of data, and mulitple indexes,
-prompt the difference in effort (and in time) is noticable.
+prompt 
+prompt On Real Volumes, this Counts.
 prompt  
-prompt Best: Avoid Global Indexes, Please.
 prompt
-prompt (yes, I know, it gets better, more clever, with every version, 
-prompt but still, Global-Indexes are contrary to partition-operations)
+prompt Improvements with Every Version.
 prompt  
+prompt 
 prompt Back to ppt...
 prompt  

@@ -145,13 +145,9 @@ create replace table pt2
 */
 
 
-
-prompt .
-prompt ---- original demo starts here... -----
-prompt .
-
--- table with integer-key, add 500K values, 
--- will create 5 partitions, 2 named and 2 sys-named partitions
+-- table with integer-key, add some values, 
+-- size it to be easily re-startable and no wait times.
+-- name partitions explicit to allow easy drop.
 -- 
 
 -- easier to read.
@@ -164,6 +160,12 @@ drop table pt ;
 drop table  t ; 
 
 purge recyclebin ; 
+
+clear screen
+
+prompt  
+prompt ____  original demo starts here... _____
+prompt 
 
 set echo on
 
@@ -252,23 +254,23 @@ column table_name format A20
 column part_name  format A20 
 column hv format 999999 head High_val
 
-select table_name, partition_name part_name, num_rows 
-from user_tab_partitions
-where table_name like 'PT%'
-order by table_name, partition_name ; 
-
 select table_name, '-' as part_name, num_rows 
 from user_tables
 where table_name like 'T'
 order by table_name ; 
+
+select table_name, partition_name part_name, num_rows 
+from user_tab_partitions
+where table_name like 'PT%'
+order by table_name, partition_name ; 
 
 prompt 
 prompt 
 prompt Demo Ready... : 
 prompt 
 prompt We have two tables 
-prompt T    (conventional, all records in 1 table-segment) 
-prompt PT   (partitioned), with partitions of 10K records each.
+prompt T    conventional, all records in 1 table-segment 
+prompt PT   partitioned, with partitions of 10K records each.
 prompt 
 prompt 
 

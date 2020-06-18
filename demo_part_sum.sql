@@ -5,34 +5,37 @@
 set linesize 150
 set echo off
 
+clear screen
+
 prompt 
 prompt Do an Aggregate of some data, 
-prompt data that would normally be in 1 or few partitions.
+prompt 
+prompt Data that would normally be in 1 or few partitions.
 prompt 
 prompt 
 prompt First on the conventional table T, then on PT
 prompt 
+accept hit_enter prompt 'Hit enter to see QRY ahd plan ... '
+
+clear screen 
 
 set autotrace on explain
 set feedb off
 set echo on
 
 
-select trunc ( id / 1000 ) as range
+select round ( id / 10000 ) as range
      , sum (amount)    as sumtotal
 from t 
 where id < 10000
-group by trunc(id / 1000)  
+group by round(id / 10000)  
 order by 1;
 
 set echo off
-set feedb off
 
 prompt  
-prompt Total of the last range, CBO decided on FTS (I hope...)
-prompt (in PT we know they will be in the last partition)
+prompt CBO decided on FTS (I hope), but data is in limited range
 prompt  
-
 accept hit_enter prompt 'Hit enter to see the stats of the Qry... '
 
 set feedb off
@@ -47,7 +50,7 @@ set feedb off
 set autotrace off
 
 prompt 
-prompt Check the effort of the Qry, 6000 gets, whole table... '
+prompt Check the effort, 5700 gets, whole table... '
 prompt 
 accept hit_enter prompt 'hit enter to see same SQL on the PT'
 
@@ -57,18 +60,17 @@ set feedback off
 set echo on
 
 
-select trunc ( id / 1000 ) as range
+select round ( id / 10000 ) as range
      , sum (amount)    as sumtotal
 from pt 
 where id < 10000
-group by trunc(id / 1000 )  
+group by round(id / 10000 )  
 order by 1;
 
 set echo off
 set feed off
 
 prompt 
-prompt Check what happened on a Partitioned table. 
 prompt CBO Knows it only needs (1) specific partition(s).
 prompt 
 accept hit_enter prompt 'hit enter to see the stats of the QRY'
@@ -90,9 +92,23 @@ prompt Notice: No Index was touched in the making of these aggregates...
 prompt 
 accept hit_enter prompt 'hit enter to continue '
 
+clear screen
+
 prompt
-prompt Partitrion - Elimination : can help reduce the amount of data to Search..
 prompt 
+prompt Voila! 
+prompt
+prompt Main point made.  
+prompt
+prompt 
+prompt Partition Elimination.
+prompt
+prompt Reduce the amount of data to Search..
+prompt 
+prompt 
+prompt On Large Volumes, with many partitions, This Counts
+prompt
+prompt
 prompt Back to ppt..
 prompt
 
