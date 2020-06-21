@@ -5,6 +5,8 @@
 set linesize 150
 set echo off
 
+alter session set optimizer_mode=all_rows ;
+
 clear screen
 
 prompt 
@@ -24,11 +26,11 @@ set feedb off
 set echo on
 
 
-select round ( id / 10000 ) as range
+select trunc ( id / 10000 ) as range
      , sum (amount)    as sumtotal
 from t 
-where id < 10000
-group by round(id / 10000)  
+where id between 10000 and 19999
+group by trunc(id / 10000)  
 order by 1;
 
 set echo off
@@ -43,6 +45,7 @@ set feedb off
 set autotrace on stat
 set echo on
 
+l
 /
 
 set echo off
@@ -60,11 +63,11 @@ set feedback off
 set echo on
 
 
-select round ( id / 10000 ) as range
+select trunc ( id / 10000 ) as range
      , sum (amount)    as sumtotal
 from pt 
-where id < 10000
-group by round(id / 10000 )  
+where id between 10000 and 19999
+group by trunc(id / 10000 )  
 order by 1;
 
 set echo off
@@ -79,6 +82,7 @@ set autotrace on statistics
 set feedback off
 set echo on
 
+l
 /
 
 set echo off

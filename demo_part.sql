@@ -206,7 +206,6 @@ create unique index t_pk on  t ( id ) ;
 
 alter table t add constraint t_pk primary key ( id ) ;
 
-
 -- 40K records, nice number for timing, effort, demo.. 
 set timing on
 
@@ -240,13 +239,15 @@ set echo on
 --
 insert into t select * from pt ;
 
-set echo off
-commit ;
+-- 
+--  add extra index for lookups, gather stats..
+-- 
 
-set echo on
+create index pt_li_pay on pt ( payload, filler, amount) local ;
+create index  t_i_pay  on  t ( payload, filler, amount) ;
 
-EXEC DBMS_STATS.gather_table_stats(user, 'PT', null, null);
-EXEC DBMS_STATS.gather_table_stats(user, 'T' , null, null);
+EXEC DBMS_STATS.gather_table_stats(user, 'PT', null, 10);
+EXEC DBMS_STATS.gather_table_stats(user, 'T' , null, 10);
 
 set echo off
 

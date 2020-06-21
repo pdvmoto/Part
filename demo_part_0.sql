@@ -82,9 +82,9 @@ clear screen
 
 prompt  
 prompt We have seen: 
-prompt - delete 10K records from Conventional table;             13000 K redo.
-prompt - delete 10K records from Partitioned table, 1 partition; 15000 K redo.
-prompt - remove 1 Partition with 10K records;                     0.02 K redo..
+prompt - delete 10K records from Conventional table;             23000 K redo.
+prompt - delete 10K records from Partitioned table, 1 partition; 26000 K redo.
+prompt - remove 1 Partition with 10K records;                     0.04 K redo..
 prompt  
 prompt Bonus Question (homework!) Will redo increase when dropping Large Partition ? 
 prompt  

@@ -16,7 +16,7 @@ set verify off
 set timing off
 
 -- cleanup just in case.
-drop indes pt_li_pay ;    
+drop index pt_li_pay ;    
 drop index pt_gi_pay ;
 
 clear screen
@@ -123,7 +123,11 @@ accept hit_enter prompt 'Hit Enter to Continue...'
 clear screen 
 
 prompt  
-prompt If Possible: Avoid Global Indexes...
+prompt 
+prompt Main Point:
+prompt
+prompt 
+prompt Avoid Global Indexes.
 prompt 
 prompt 
 prompt On Real Volumes, this Counts.
