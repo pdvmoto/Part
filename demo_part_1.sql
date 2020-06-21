@@ -124,6 +124,7 @@ prompt Main Point Made:
 prompt
 prompt
 prompt Local Indexes _Can_lead to a lot of looping
+prompt
 prompt Global Index _was_ more efficient.
 prompt
 prompt
