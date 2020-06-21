@@ -114,3 +114,30 @@ prompt
 set echo on
 drop index pt_li_a ;
 
+set echo off
+
+clear screen 
+
+prompt
+prompt
+prompt Main Point Made:
+prompt
+prompt
+prompt Local Indexes _Can_lead to a lot of looping
+prompt Global Index _was_ more efficient.
+prompt
+prompt
+prompt Consequences... ?
+prompt
+prompt IF       you want to Ban Global Indexes...
+prompt 
+prompt THEN     All SQL must limit itself to 1 or few Partitions.
+prompt 
+prompt Hence,   All SQL must have some "Partition Key Limit"
+prompt 
+prompt This Means: Design of Application with Partitioning in mind. 
+prompt
+prompt
+prompt ... return to ppt...
+prompt 
+

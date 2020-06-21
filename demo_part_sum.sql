@@ -28,7 +28,7 @@ set echo on
 
 select trunc ( id / 10000 ) as range
      , sum (amount)    as sumtotal
-from t 
+from T 
 where id between 10000 and 19999
 group by trunc(id / 10000)  
 order by 1;
@@ -65,7 +65,7 @@ set echo on
 
 select trunc ( id / 10000 ) as range
      , sum (amount)    as sumtotal
-from pt 
+from PT 
 where id between 10000 and 19999
 group by trunc(id / 10000 )  
 order by 1;
