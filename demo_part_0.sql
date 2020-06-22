@@ -27,7 +27,7 @@ accept hit_enter prompt 'Hit Enter to Continue...'
 set autotrace on stat
 set echo on
 
-DELETE from t where id < 10000;
+DELETE from T where id < 10000;
 
 set echo off
 set autotrace off
@@ -44,7 +44,7 @@ set autotrace on stat
 set feedback on
 set echo on
 
-DELETE from pt where id < 10000;
+DELETE from PT where id < 10000;
 
 set echo off
 set timing off
@@ -110,5 +110,5 @@ prompt
 prompt On Volumes, This Counts.
 prompt
 prompt 
-prompt back to ppt...
+prompt next: demo_part_0a, or back to ppt...
 prompt  

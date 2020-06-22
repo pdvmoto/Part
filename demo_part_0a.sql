@@ -10,6 +10,10 @@
 --  explain removal of partition, and effect on global indes (pointers)
 -- 
 
+column index_name format A15
+column partition_name format A10
+column status format A15
+
 set echo off
 set autotrace off
 set verify off
@@ -48,10 +52,22 @@ prompt Ready to DROP a PARTITION (with GLOBAL INDEX) and measure redo.
 prompt 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
+clear screen
 set feedb on
 set echo on
 
 alter table pt DROP PARTITION pt_1 ; 
+
+select index_name, status from user_indexes where index_name like 'PT_G%';
+
+set echo off
+
+prompt 
+prompt Check status of index, it may need rebuilding..
+prompt 
+accept hit_enter prompt 'Hit Enter to rebuild it here+now...'
+
+set echo on
 
 alter index pt_gi_pay rebuild /* force the maintenance in this session */ ;
 
@@ -95,11 +111,13 @@ accept hit_enter prompt 'Hit Enter to Continue...'
 
 
 clear screen
-
 set feedback on
 set echo on
 
-alter table pt drop partition pt_2 ;
+alter table pt drop partition pt_3 ;
+
+select index_name, partition_name, status 
+from user_ind_partitions where index_name like 'PT_L%';
 
 set echo off
 set timing off
@@ -112,10 +130,12 @@ clear screen
 
 prompt  
 prompt We have seen effect of Global vs Local index on partition operation: 
-prompt - drop partition, 10K records with global index,          200 K redo.
-prompt - drop partition, 10K records with only local indexes,     30 K redo.
+prompt - GLOBAL index, drop partition, index "UNUSABLE",   200 K redo.
+prompt - LOCAL  index, drop partition, index USABLE,        30 K redo.
 prompt  
-prompt Bonus Question (homework!) which background process, and how long... ? 
+prompt Bonus Question 1 (homework!) what happens if partiions are TB size?
+prompt
+prompt Bonus Question 2 (homework!) which background process, and how long... ? 
 prompt  
 
 accept hit_enter prompt 'Hit Enter to Continue...'
@@ -133,7 +153,7 @@ prompt
 prompt On Real Volumes, this Counts.
 prompt  
 prompt
-prompt Improvements with Every Version.
+prompt (but, Improvements with Every Version.)
 prompt  
 prompt 
 prompt Back to ppt...
