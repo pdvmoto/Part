@@ -28,7 +28,7 @@ clear screen
 
 prompt 
 prompt 
-prompt Show how an index can pinpoint a record...
+prompt [ What : how Global/Local index can pinpoint a (small) range ]
 prompt 
 prompt  
 

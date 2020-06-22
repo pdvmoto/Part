@@ -23,11 +23,21 @@ set timing off
 drop index pt_li_pay ;    
 drop index pt_gi_pay ;
 
+clear screen 
+
+prompt
+prompt [ What we will do : drop partion, with Global and Local index. ]
+prompt
+prompt Ready to demonstrate and measure redo.
+prompt
+
+accept hit_enter prompt 'Hit Enter to Continue...'
+
 clear screen
 
-prompt .
+prompt 
 prompt Add a global index.
-prompt .
+prompt  
 
 set feedback on
 set echo on
@@ -67,6 +77,8 @@ prompt Check status of index, it may need rebuilding..
 prompt 
 accept hit_enter prompt 'Hit Enter to rebuild it here+now...'
 
+clear screen
+
 set echo on
 
 alter index pt_gi_pay rebuild /* force the maintenance in this session */ ;
@@ -78,8 +90,7 @@ set feedback off
 prompt .
 prompt Dropped 1 partition, 10K rows, and rebuilt the index, how much redo...? 
 prompt .
-prompt [ Future demo: show unusable-idex, 
-prompt   and explain maintenance by SYS.PMO_DEFERRED_GIDX_MAINT_JOB ] 
+prompt [ extra/future: explain maintenance by SYS.PMO_DEFERRED_GIDX_MAINT_JOB ] 
 prompt .
 
 @show_redo

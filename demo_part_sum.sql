@@ -10,14 +10,12 @@ alter session set optimizer_mode=all_rows ;
 clear screen
 
 prompt 
-prompt Do an Aggregate of some data, 
+prompt [ What we will do : Aggregate of some data, on T and PT ] 
 prompt 
 prompt Data that would normally be in 1 or few partitions.
 prompt 
 prompt 
-prompt First on the conventional table T, then on PT
-prompt 
-accept hit_enter prompt 'Hit enter to see QRY ahd plan ... '
+accept hit_enter prompt 'Hit enter to see QRY and plan ... '
 
 clear screen 
 
@@ -27,7 +25,7 @@ set echo on
 
 
 select trunc ( id / 10000 ) as range
-     , sum (amount)    as sumtotal
+     , count (*) as nr_items, sum (amount)    as sumtotal
 from T 
 where id between 10000 and 19999
 group by trunc(id / 10000)  
@@ -64,7 +62,7 @@ set echo on
 
 
 select trunc ( id / 10000 ) as range
-     , sum (amount)    as sumtotal
+     ,  count (*) as nr_items, sum (amount)    as sumtotal
 from PT 
 where id between 10000 and 19999
 group by trunc(id / 10000 )  
