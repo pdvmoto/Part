@@ -246,8 +246,8 @@ insert into t select * from pt ;
 create index pt_li_pay on pt ( payload, filler, amount) local ;
 create index  t_i_pay  on  t ( payload, filler, amount) ;
 
-EXEC DBMS_STATS.gather_table_stats(user, 'PT', null, 100);
-EXEC DBMS_STATS.gather_table_stats(user, 'T' , null, 100);
+EXEC DBMS_STATS.gather_table_stats(user, 'PT', null, 1);
+EXEC DBMS_STATS.gather_table_stats(user, 'T' , null, 1);
 
 set echo off
 
