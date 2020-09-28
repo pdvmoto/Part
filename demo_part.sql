@@ -188,10 +188,18 @@ set echo off
 prompt .
 accept hit_enter prompt 'Check the Partitioned table... '
 
+set echo on
+
 -- beware, constraint in table-def generates global index
 create unique index pt_pk on  pt ( id ) local ; 
 
 alter table pt add constraint pt_pk primary key ( id ) ;
+
+prompt .
+prompt .
+prompt check: table with PK and Local Unique indes
+prompt .
+accept hit_enter prompt 'Check the Partitioned table... '
 
 create table t 
 ( id number ( 9,0)   
