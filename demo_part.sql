@@ -10,6 +10,8 @@ story to tell in ppt :
  - positive: scanning 1 or few partitions to get your (aggregated) result.
  - pitfall: scanning of multiple local_indexes to find a (small) target.
 
+Demo-notes:
+ - screen 128 x 34 , need wide screen for explain in demo_1
 
  - re-test against 18.x and 12.1.
 
@@ -185,22 +187,31 @@ partition by range ( id )  interval ( 10000 )
 
 set echo off
 
-prompt .
+prompt  
 accept hit_enter prompt 'Check the Partitioned table... '
 
+clear screen
 set echo on
 
 -- beware, constraint in table-def generates global index
+-- hence create unique Local index first
+-- 
 create unique index pt_pk on  pt ( id ) local ; 
 
 alter table pt add constraint pt_pk primary key ( id ) ;
 
-prompt .
-prompt .
-prompt check: table with PK and Local Unique indes
-prompt .
-accept hit_enter prompt 'Check the Partitioned table... '
+set echo off
 
+prompt  
+accept hit_enter prompt 'Table now with PK over Local, Unique index...'
+
+clear screen
+
+set echo on
+
+--
+-- Create identical table T, non-partitioned
+-- 
 create table t 
 ( id number ( 9,0)   
 , active            varchar2 ( 1 )  
@@ -214,15 +225,19 @@ create unique index t_pk on  t ( id ) ;
 
 alter table t add constraint t_pk primary key ( id ) ;
 
--- 40K records, nice number for timing, effort, demo.. 
-set timing on
+set echo off
+prompt 
+accept hit_enter prompt 'Check the indentical, conventional table T... '
 
 set feedback on
-set timing on
+
+clear screen
+
 set echo on
 
 --
 -- fill with deliberately funny, compressible data
+-- 4 partitions, 40K records was nice number for timing, effort, demo.. 
 --
 insert into pt
 select 
@@ -236,7 +251,6 @@ from dual
 connect by rownum <= 40000 ;
 
 set echo off
-set timing off
 
 commit ; 
 
@@ -247,8 +261,16 @@ set echo on
 --
 insert into t select * from pt ;
 
--- 
---  add extra index for lookups, gather stats..
+set echo off
+prompt
+accept hit_enter prompt 'Same Data inserted into both tables... '
+
+clear screen
+
+set echo on
+
+--
+--  add extra index for realistic effect, and gather stats..
 -- 
 
 create index pt_li_pay on pt ( payload, filler, amount) local ;
