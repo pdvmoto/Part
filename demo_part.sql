@@ -296,6 +296,11 @@ where table_name like 'PT%'
 order by table_name, partition_name ; 
 
 prompt 
+prompt
+prompt (and dont forget to set terminal to 128 x 34 and large font...)
+prompt
+prompt
+prompt
 prompt 
 prompt Demo Ready... : 
 prompt 
@@ -304,4 +309,5 @@ prompt T    conventional, all records in 1 table-segment
 prompt PT   partitioned, with partitions of 10K records each.
 prompt 
 prompt 
+
 
