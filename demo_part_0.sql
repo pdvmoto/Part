@@ -7,73 +7,72 @@ set autotrace off
 set verify off
 set timing off
 
-prompt .
+prompt  
 prompt Resetting stats for measuring redo..
 prompt (the nr you see is the redo from previous activity, if any)
-prompt .
+prompt  
 
-@show_redo 
+@show_redo_reset
 
 clear screen
 
-prompt .
-prompt stats are reset, ready to delete some data and measure redo.
-prompt .
+prompt  
+prompt [ What we will do : delete-from-T, delete-from-PT, and Drop-Partition. ]
+prompt  
+prompt Ready to demonstrate and measure redo.
+prompt  
 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
-set timing on
 set autotrace on stat
 set echo on
 
-delete from t where id < 10000;
+DELETE from T where id < 10000;
 
 set echo off
 set autotrace off
 set timing off
 set feedback off
 
-prompt .
-prompt Conventional Table, how much redo...? 
-prompt .
+prompt  
+prompt Deleted from Conventional Table, how much redo...? 
+prompt  
 
 @show_redo
 
-set timing on
 set autotrace on stat
 set feedback on
 set echo on
 
-delete from pt where id < 10000;
+DELETE from PT where id < 10000;
 
 set echo off
 set timing off
 set autotrace off
 set feedback off
 
-prompt .
-prompt Partitioned table, how much redo...?
-prompt .
+prompt  
+prompt Deleted from Partitioned table, how much redo...?
+prompt  
 
-@show_redo 
+@show_redo
 
-set timing on
 set autotrace on stat
 set feedback on
 set echo on
 
-alter table pt drop partition pt_2 ;
+alter table pt DROP PARTITION pt_2 ;
 
 set echo off
 set timing off
 set autotrace off
 set feedback off
 
-prompt .
-prompt Drop a Partition, how much redo...?
-prompt .
+prompt  
+prompt Dropped a Partition, how much redo...?
+prompt  
 
-prompt .
+prompt  
 
 @show_redo
 
@@ -81,24 +80,35 @@ set feedback on
 
 clear screen 
 
-prompt .
+prompt  
 prompt We have seen: 
-prompt - delete 10K records from Conventional table;              13   M redo.
-prompt - delete 10K records from Partitioned table, 1 partition;  15   M redo.
-prompt - remove 1 Partition with 10K records;                     0.01 M redo..
-prompt .
-prompt Bonus Question (homework!) will redo increase dropping Large Partition ? 
-prompt .
+prompt - delete 10K records from Conventional table;             23000 K redo.
+prompt - delete 10K records from Partitioned table, 1 partition; 26000 K redo.
+prompt - remove 1 Partition with 10K records;                       36 K redo..
+prompt  
+prompt Bonus Question (homework!) Will redo increase when dropping Large Partition ? 
+prompt  
 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
 clear screen 
 
-prompt .
-prompt When you do this with Real Volumes of data, 
-prompt the difference in effort and in time is noticable.
-prompt .
-prompt This is it; Best Use of Partitioning (imho)
-prompt .
-prompt back to ppt...
-prompt .
+prompt
+prompt
+Prompt Voila!
+prompt  
+prompt Main Point Made.
+prompt 
+prompt 
+prompt DROP PARTITION Saves ...
+prompt
+prompt - Saves Redo-effort (logwriter, archiving, standby...)
+prompt
+prompt - Saves Time! 
+prompt 
+prompt
+prompt On Volumes, This Counts.
+prompt
+prompt 
+prompt next: demo_part_0a, or back to ppt...
+prompt  

@@ -136,8 +136,6 @@ and s.audsid =
   where a.sid = ( select distinct sid from v$mystat)
 );
 
-set feedback on
-
 commit ;
 
 -- accept hit_enter prompt 'Ready for next measurement, Hit Enter to Continue...'

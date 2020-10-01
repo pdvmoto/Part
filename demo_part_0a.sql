@@ -2,7 +2,17 @@
 
 -- delete records versus drop partition, global/local index..
 -- since 12.x: Effort for update-global-indexes still there, but moved to background 
+--  
+-- only use as extra... incomplete demo, index-maintenance not "counted in session" 
 
+-- 
+--  ppt needed : partitioned-table + global index + local index... 
+--  explain removal of partition, and effect on global indes (pointers)
+-- 
+
+column index_name format A15
+column partition_name format A10
+column status format A15
 
 set echo off
 set autotrace off
@@ -10,84 +20,115 @@ set verify off
 set timing off
 
 -- cleanup just in case.
-drop indes pt_li_pay ;    
+drop index pt_li_pay ;    
 drop index pt_gi_pay ;
+
+clear screen 
+
+prompt
+prompt [ What we will do : drop partion, with Global and Local index. ]
+prompt
+prompt Ready to demonstrate and measure redo.
+prompt
+
+accept hit_enter prompt 'Hit Enter to Continue...'
 
 clear screen
 
-prompt .
+prompt 
 prompt Add a global index.
-prompt .
+prompt  
 
 set feedback on
 set echo on
 
-create index pt_gi_pay on pt ( payload, dt, active, id) GLOBAL ;
+create index pt_gi_pay on pt ( payload, filler, amount) GLOBAL ;
 
 set echo off
 
+-- accept hit_enter prompt 'Hit Enter to Continue...'
+
+-- prompt .
+-- prompt Resetting stats for measuring redo..
+-- prompt (the nr you see is the redo from previous activity, if any)
+-- prompt .
+
+@show_redo_reset
+
+-- clear screen
+
+prompt 
+prompt Ready to DROP a PARTITION (with GLOBAL INDEX) and measure redo.
+prompt 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
-prompt .
-prompt Resetting stats for measuring redo..
-prompt (the nr you see is the redo from previous activity, if any)
-prompt .
+clear screen
+set feedb on
+set echo on
 
-@show_redo 
+alter table pt DROP PARTITION pt_1 ; 
+
+select index_name, status from user_indexes where index_name like 'PT_G%';
+
+set echo off
+
+prompt 
+prompt Check status of index, it may need rebuilding..
+prompt 
+accept hit_enter prompt 'Hit Enter to rebuild it here+now...'
 
 clear screen
 
-prompt .
-prompt stats are reset, ready to drop some partitions and measure redo.
-
-accept hit_enter prompt 'Hit Enter to Continue...'
-
-set timing on
 set echo on
 
-alter table pt drop partition pt_3 update global indexes ; 
+alter index pt_gi_pay rebuild /* force the maintenance in this session */ ;
 
 set echo off
 set autotrace off
-set timing off
 set feedback off
 
 prompt .
-prompt Dropped 1 partition, 10K rows, now how much redo...? 
+prompt Dropped 1 partition, 10K rows, and rebuilt the index, how much redo...? 
+prompt .
+prompt [ extra/future: explain maintenance by SYS.PMO_DEFERRED_GIDX_MAINT_JOB ] 
 prompt .
 
 @show_redo
 
-prompt .   
+clear screen
+
+prompt     
 prompt Now replace with a local index.
-prompt .
+prompt  
 
 set feedback on
 set echo on
 
 drop   index pt_gi_pay ;
-create index pt_li_pay on pt ( payload, dt, active, id) LOCAL ;
+create index pt_li_pay on pt ( payload, filler, amount) LOCAL ;
 
 set echo off
 set feedback on
 
-prompt .
-prompt Reset statistics for measuring (notice the redo from index-creation)
-promp . 
+@show_redo_reset
 
-@show_redo
+
+prompt  
+prompt Replaced the Global index with a LOCAL INDEX.
+promp   
+prompt Ready to DROP a PARTITION (with LOCAL INDEX) and measure redo.
+prompt 
+accept hit_enter prompt 'Hit Enter to Continue...'
+
 
 clear screen
-
-set echo on
 set feedback on
-set timing on
+set echo on
 
-prompt .
-prompt now remove the partition with only Local Indexes
-promp . 
+alter table pt drop partition pt_3 ;
 
-alter table pt drop partition pt_4 ;
+select index_name, partition_name, status 
+from user_ind_partitions where index_name like 'PT_L%';
 
 set echo off
 set timing off
@@ -96,28 +137,35 @@ set feedback off
 
 @show_redo
 
-
-
 clear screen
 
-prompt .
-prompt Now We have seen effect of a local index on partition operation: 
-prompt - delete 10K records from Conventional table;              13   M redo.
-prompt - delete 10K records from Partitioned table, 1 partition;  15   M redo.
-prompt - remove 1 Partition with 10K records;                     0.01 M redo..
-prompt .
-prompt Bonus Question (homework!) will redo increase dropping Large Partition ? 
-prompt .
+prompt  
+prompt We have seen effect of Global vs Local index on partition operation: 
+prompt - GLOBAL index, drop partition, index "UNUSABLE",   200 K redo.
+prompt - LOCAL  index, drop partition, index USABLE,        30 K redo.
+prompt  
+prompt Bonus Question 1 (homework!) what happens if partiions are TB size?
+prompt
+prompt Bonus Question 2 (homework!) which background process, and how long... ? 
+prompt  
 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
 clear screen 
 
-prompt .
-prompt When you do this with Real Volumes of data, 
-prompt the difference in effort and in time is noticable.
-prompt .
-prompt This is it; Best Use of Partitioning (imho)
-prompt .
-prompt back to ppt...
-prompt .
+prompt  
+prompt 
+prompt Main Point:
+prompt
+prompt 
+prompt Avoid Global Indexes.
+prompt 
+prompt 
+prompt On Real Volumes, this Counts.
+prompt  
+prompt
+prompt (but, Improvements with Every Version.)
+prompt  
+prompt 
+prompt Back to ppt...
+prompt  
