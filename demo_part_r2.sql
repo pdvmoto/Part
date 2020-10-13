@@ -58,7 +58,7 @@ create table mmt (
 , owner varchar2(32)
 , vrt_id number
 , tma_id number
-, constraint mmt_pk primary key ( id) 
+, constraint mmt_pk primary key ( id)  USING INDEX LOCAL
 )
 partition by range (id)
 interval ( 10000 ) 
@@ -81,7 +81,7 @@ create table mmt_chd (
   mmt_id number not null
 , chd_id number not null 
 , object_name varchar2(32)
-, constraint mcd_pk primary key ( mmt_id, chd_id )
+, constraint mcd_pk primary key ( mmt_id, chd_id ) USING INDEX LOCAL
 , constraint mcd_mmt_fk foreign key ( mmt_id ) references mmt(id) ) 
 partition by reference (mcd_mmt_fk );
 
@@ -98,7 +98,7 @@ create table mmt_chd_chd (
 , chd_id number not null
 , ccd_id number not null
 , column_name varchar (32 ) 
-, constraint ccd_pk primary key ( mmt_id, chd_id, ccd_id )
+, constraint ccd_pk primary key ( mmt_id, chd_id, ccd_id ) USING INDEX LOCAL
 , constraint ccd_mcd_fk foreign key ( mmt_id, chd_id ) references mmt_chd (mmt_id, chd_id) ) 
 partition by reference (ccd_mcd_fk );
 
@@ -201,8 +201,7 @@ set echo on
 
 alter table mmt drop partition mmt_p2 ; 
 
-select table_name, index_name, status from user_indexes 
-where index_name like 'M%' or status <> 'VALID' ;
+select distinct index_name, status from user_ind_partitions ; 
 
 set echo off
 set timing off
@@ -216,9 +215,9 @@ set echo off
 prompt
 prompt
 prompt 3 partitions dropped, 
-prompt e.g. the drop was cascaded into the ref-partitions.... 
-prompt
-prompt But we seem to have a problem with indexes ??
+prompt e.g. the drop cascaded as desired.
+prompt 
+prompt And... all (LOCAL) indexes stil usable.
 prompt
 accept hit_enter prompt "This thing works, but with some caveats..."
 
@@ -229,12 +228,13 @@ prompt
 prompt Voila!
 prompt
 prompt
-prompt Main Point made: You can drop top-level partition, 
-prompt and Dependents will drop too...
+prompt Main Point made: beware of the "default" GLOBAL indexes.
 prompt
-prompt .. but what where those indexes..
 prompt
-prompt back to ppt (or skip to r2..)
+prompt And we demonstrated: You. Need. To. Test. (and Verify!)
+prompt
+prompt
+prompt back to ppt 
 prompt
 
 
