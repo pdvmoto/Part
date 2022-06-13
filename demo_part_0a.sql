@@ -167,5 +167,5 @@ prompt
 prompt (but, Improvements with Every Version.)
 prompt  
 prompt 
-prompt Back to ppt...
+prompt dont forget: re-initialize...  then Back to ppt...
 prompt  
