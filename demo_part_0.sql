@@ -110,5 +110,5 @@ prompt
 prompt On Volumes, This Counts.
 prompt
 prompt 
-prompt next: demo_part_0a, or back to ppt...
+prompt next: re-initiate + demo_part_0a, or back to ppt...
 prompt  
