@@ -174,6 +174,8 @@ commit ;
 -- give it statistics for the 1 day.
 EXEC DBMS_STATS.gather_table_stats(user, 'PT1', null, 100);
 
+-- Yprompt skip gathering stats, try the local index now
+
 -- verify sizes: indexes are larger than partitions
 @segsizes scott pt1
 
@@ -233,10 +235,15 @@ set autotrace on
 
 set autotrace off
 
-accept hit_enter prompt 'verify: full scan of partition now more work.'
+accept hit_enter prompt 'verify: full scan/partition now more work, until we gather stats.'
 
 
-EXEC DBMS_STATS.gather_table_stats(user, 'PT1', null, 100);
+set echo on
+
+prompt skip gathering stats, try the local index now
+-- EXEC DBMS_STATS.gather_table_stats(user, 'PT1', null, 100);
+
+set echo off
 
 -- verify same sql, still does full scan, but partition is larger..
 select oid, ttm, substr ( pld, 1, 10 ) payload
@@ -276,7 +283,7 @@ set autotrace on
 /
 set autotrace off
 
-accept hit_enter prompt 'verify: just checking, new UNIQE LOCAL index.'
+accept hit_enter prompt 'verify: just checking, new PK - LOCAL index.'
 
 
 
