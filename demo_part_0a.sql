@@ -63,6 +63,8 @@ prompt
 accept hit_enter prompt 'Hit Enter to Continue...'
 
 clear screen
+prompt
+
 set feedb on
 set echo on
 
@@ -78,6 +80,7 @@ prompt
 accept hit_enter prompt 'Hit Enter to rebuild it here+now...'
 
 clear screen
+prompt
 
 set echo on
 
@@ -122,6 +125,8 @@ accept hit_enter prompt 'Hit Enter to Continue...'
 
 
 clear screen
+prompt
+
 set feedback on
 set echo on
 
@@ -141,13 +146,17 @@ clear screen
 
 prompt  
 prompt We have seen effect of Global vs Local index on partition operation: 
-prompt - GLOBAL index, drop partition, index "UNUSABLE",   200 K redo.
-prompt - LOCAL  index, drop partition, index USABLE,        30 K redo.
+prompt - GLOBAL index, drop partition: index "UNUSABLE",  200 K redo.
+prompt - LOCAL  index, drop partition: index USABLE,       30 K redo.
+prompt 
 prompt  
-prompt Bonus Question 1 (homework!) what happens if partiions are TB size?
+prompt Bonus Question 1 (homework!) what happens if partitions are TB size?
 prompt
 prompt Bonus Question 2 (homework!) which background process, and how long... ? 
 prompt  
+prompt
+prompt Lesson: GLOBAL index will always need WORK to be done.
+prompt 
 
 accept hit_enter prompt 'Hit Enter to Continue...'
 

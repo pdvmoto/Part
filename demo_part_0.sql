@@ -19,13 +19,19 @@ clear screen
 prompt  
 prompt [ What we will do : delete-from-T, delete-from-PT, and Drop-Partition. ]
 prompt  
-prompt Ready to demonstrate and measure redo.
+prompt Ready to demonstrate and measure redo...
 prompt  
 
 accept hit_enter prompt 'Hit Enter to Continue...'
 
+clear screen
+
+prompt
+
 set autotrace on stat
+set feedback on
 set echo on
+
 
 DELETE from T where id < 10000;
 
@@ -40,9 +46,14 @@ prompt
 
 @show_redo
 
+clear screen 
+
+prompt
+
 set autotrace on stat
 set feedback on
 set echo on
+
 
 DELETE from PT where id < 10000;
 
@@ -57,9 +68,14 @@ prompt
 
 @show_redo
 
+clear screen
+
+prompt
+
 set autotrace on stat
 set feedback on
 set echo on
+
 
 alter table pt DROP PARTITION pt_2 ;
 
