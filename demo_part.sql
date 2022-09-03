@@ -158,6 +158,10 @@ set sqlprompt "SQL> "
 -- two tables, partitioned and conventional, for comparison
 -- also consider: base-table with data-set for re-deployments
 
+drop table pt_ccc ; 
+drop table pt_cc ; 
+drop table pt_c ; 
+
 drop table pt ; 
 drop table  t ; 
 
