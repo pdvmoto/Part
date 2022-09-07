@@ -162,6 +162,10 @@ drop table pt_ccc ;
 drop table pt_cc ; 
 drop table pt_c ; 
 
+drop table t_ccc ; 
+drop table t_cc ; 
+drop table t_c ; 
+
 drop table pt ; 
 drop table  t ; 
 
