@@ -9,6 +9,8 @@ drop table pt_c ;
 --drop table tp2 ; 
 --drop table tp1 ; 
 
+cle scre
+
 set echo on
 
 create table pt_c (
@@ -27,11 +29,15 @@ partition by
 set echo off
 
 prompt .
-prompt 1st child of PT, notice the PK is two fields.. 
-prompt Dev comment: We dont want composite keys. OK...
+prompt The 1st child of PT
+prompt Notice the ref-constraint.
+prompt .
+prompt Notice the PK: local index, two fields...
+prompt Dev comment: We dont want composite keys. ...OK
 prompt .
 host read -p "pt_c: retry with just ID as PK..."
 
+cle scre
 set echo on
 
 drop table pt_c ;
@@ -57,6 +63,8 @@ prompt .
 
 host read -p "pt_c: 1st child, now with PK conform standard.. ? "
 
+cle scre
+
 set echo on
 
 drop table pt_c ; 
@@ -81,6 +89,8 @@ prompt So we have to carry the parent key...
 prompt .
 
 host read -p "pt_c: 1st child, again, with composite PK. "
+
+cle scre
 
 set echo on
 
@@ -108,18 +118,20 @@ prompt pt_cc: the PK and FK become less readable already.
 prompt .
 host read -p "pt_cc: 3rd level, using parent keys for simplicity."
 
+cle scre
+
 set echo on
 
 -- the nr4 child..
 
 create table pt_ccc (
-  id            number  not null -- effectively the pt_ccc_id
-, pt_cc_id      number  not null 
-, pt_c_id       number  not null 
-, pt_id         number  not null 
-, created_dt    date
-, ccc_type      varchar2(10)
-, payload       varchar2(200)
+  id             number  not null -- effectively the pt_ccc_id
+, pt_cc_id       number  not null 
+, pt_c_id        number  not null 
+, pt_id          number  not null 
+, created_dt     date
+, ccc_type       varchar2(10)
+, payload        varchar2(200)
 , constraint pt_ccc_pk primary key       ( pt_id, pt_c_id, pt_cc_id, id) using index local
 , constraint pt_ccc_fk_pt_cc foreign key ( pt_id, pt_c_id, pt_cc_id ) 
                         references pt_cc ( pt_id, pt_c_id,       id) 
