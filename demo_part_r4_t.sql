@@ -9,6 +9,8 @@ drop table t_ccc ;
 drop table t_cc ; 
 drop table t_c ; 
 
+set autotrace off
+
 set echo on
 
 create table t_c (
@@ -36,7 +38,6 @@ create table t_cc (
                        references t_c ( t_id,      id) 
 )
 ;
-
 
 -- the nr4 child..
 
@@ -92,8 +93,29 @@ from t_cc ;
 
 commit ; 
 
+set echo off
+
 -- EXEC DBMS_STATS.gather_table_stats(user, 'T_C', null, 1);
 -- EXEC DBMS_STATS.gather_table_stats(user, 'T_CC', null, 1);
 -- EXEC DBMS_STATS.gather_table_stats(user, 'T_CCC', null, 1);
+
+set echo off
+cle scre
+
+
+column table_name format A20
+column part_name  format A20
+column hv format 999999 head High_val
+
+select table_name, '-' as part_name -- , num_rows
+from user_tables
+where table_name like 'T%'
+order by table_name ;
+
+
+prompt .
+prompt We created the same 4-table hierarchy as regular, non-partitioned ables
+prompt for comparision.
+prompt .
 
 set timing off

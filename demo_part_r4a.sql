@@ -9,6 +9,7 @@ drop table pt_c ;
 --drop table tp2 ; 
 --drop table tp1 ; 
 
+cle scre
 set echo on
 
 create table pt_c (
@@ -32,9 +33,13 @@ prompt The ID field is now table-name prefixed as PT_C_ID.
 prompt And we changed the column-order for readability.
 prompt .
 
+host read -p "pt_c: 1st level child, with better column name is now pt_c_id.."
+
+cle scre
+
 set echo on
 
--- how to do it correctly: repeat all keys.
+-- next level, repeat keys
 
 create table pt_cc (
   pt_id         number  not null
@@ -60,7 +65,9 @@ host read -p "pt_cc: 3rd level, one more table to go... "
 
 set echo on
 
--- the nr4 child..
+cle scre
+
+-- the nr4, lowest child..
 
 create table pt_ccc (
   pt_id         number  not null 
@@ -85,7 +92,7 @@ prompt last level, still using parent keys, column-names, for simplicity.
 prompt Now are we happy with naming and layout ? ..
 prompt .
 
-host read -p "pt_cc: 4rd level, now we need some data (hopefully just 5sec).."
+host read -p "pt_ccc: 4rd level, now we need some data (hopefully just 5sec).."
 
 set echo on
 
@@ -134,3 +141,7 @@ EXEC DBMS_STATS.gather_table_stats(user, 'PT_CC', null, 1);
 EXEC DBMS_STATS.gather_table_stats(user, 'PT_CCC', null, 1);
 
 set timing off
+set echo off
+
+echo Dont forget the T_ccc tables..
+

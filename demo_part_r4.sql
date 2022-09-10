@@ -145,55 +145,12 @@ set echo off
 prompt .
 prompt last level, using parent keys, column-names, for simplicity.
 prompt Not quite happy with the field names though..
+prompt .
+prompt That ID column... where does it relate to... ?
+prompt .
 prompt Can we do better ?
 prompt .
 
-host read -p "pt_cc: 4rd level, but let's try something..."
-
-set echo on
-
-
-
--- now put some data in pt_c: 2 records for every parent
-
-insert into pt_c ( id, pt_id, created_dt, c_type, payload ) 
-     select  rownum, id, sysdate, 'TYP:C', 'parent_payld: '|| substr ( payload, 1, 150) 
-from pt ;
-
-insert into pt_c ( id, pt_id, created_dt, c_type, payload ) 
-     select  rownum+1 , id, sysdate, 'TYP:C', 'parent_payld: '|| substr ( payload, 1, 150) 
-from pt ;
-
-commit ;
-
-
-set timing on
-
--- put data in the pt_cc
--- theh cc
-insert into pt_cc ( id, pt_id, pt_c_id, created_dt,  cc_type,  payload ) 
-         select rownum, pt_id,      id,    sysdate, 'TYP:CC', 'p_cc_payld: '|| substr ( payload, 1, 150) 
-from pt_c ;
-
-insert into pt_cc ( id, pt_id, pt_c_id, created_dt,  cc_type,  payload ) 
-       select rownum+1, pt_id,      id,    sysdate, 'TYP:CC', 'p_cc_payld: '|| substr ( payload, 1, 150) 
-from pt_c ;
-
-commit ;
-
--- the ccc
-insert into pt_ccc ( id, pt_id, pt_c_id, pt_cc_id, created_dt,  ccc_type,  payload ) 
-          select rownum, pt_id, pt_c_id,       id,    sysdate, 'TYP:CCC', 'p_cc_payld: '|| substr ( payload, 1, 150) 
-from pt_cc ;
-
-insert into pt_ccc ( id, pt_id, pt_c_id, pt_cc_id, created_dt,  ccc_type,  payload ) 
-        select rownum+1, pt_id, pt_c_id,       id,    sysdate, 'TYP:CCC', 'p_cc_payld: '|| substr ( payload, 1, 150) 
-from pt_cc ;
-
-commit ; 
-
-EXEC DBMS_STATS.gather_table_stats(user, 'PT_C', null, 1);
-EXEC DBMS_STATS.gather_table_stats(user, 'PT_CC', null, 1);
-EXEC DBMS_STATS.gather_table_stats(user, 'PT_CCC', null, 1);
+host read -p "pt_ccc: 4rd level, but let's try something... (4a)"
 
 set timing off
