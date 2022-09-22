@@ -95,9 +95,9 @@ commit ;
 
 set echo off
 
--- EXEC DBMS_STATS.gather_table_stats(user, 'T_C', null, 1);
--- EXEC DBMS_STATS.gather_table_stats(user, 'T_CC', null, 1);
--- EXEC DBMS_STATS.gather_table_stats(user, 'T_CCC', null, 1);
+EXEC DBMS_STATS.gather_table_stats(user, 'T_C', null, 1);
+EXEC DBMS_STATS.gather_table_stats(user, 'T_CC', null, 1);
+EXEC DBMS_STATS.gather_table_stats(user, 'T_CCC', null, 1);
 
 set echo off
 cle scre
@@ -119,3 +119,5 @@ prompt for comparision.
 prompt .
 
 set timing off
+set verify off
+

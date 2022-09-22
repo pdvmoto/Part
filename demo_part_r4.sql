@@ -42,6 +42,8 @@ set echo on
 
 drop table pt_c ;
 
+cle scre
+
 create table pt_c (
   id          number  not null
 , pt_id       number  not null
@@ -68,6 +70,8 @@ cle scre
 set echo on
 
 drop table pt_c ; 
+
+cle scre 
 
 create table pt_c (
   id          number  not null

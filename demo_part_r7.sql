@@ -36,6 +36,7 @@ drop index pt_ccc_bm1;
 drop index  t_ccc_ba1;
 drop index  t_ccc_bm1;
 
+cle scre
 set echo on
 
 create bitmap index pt_ccc_ba1 on pt_ccc ( att1 ) local ; 
@@ -53,14 +54,17 @@ prompt .
 host read -p "first.. bitmap indexes on T, as intended "
 
 set linesize 130
+
+/*+ use index t */
+
 set echo on
 set autotrace on explain 
 
-select 
+select /*+ index_combine(t t_ccc_bm1 t_ccc_ba1) */
 count (*), max (created_dt) as lastdd from t_ccc t
 where att1 = 'V1'
 and m1 = 1 
-and t_id < 30000  
+and t_id < 35000  
 ;
 
 set echo off
@@ -94,14 +98,15 @@ select
 count (*), max (created_dt) as lastdd from pt_ccc t
 where att1 = 'V1'
 and m1 = 1 
-and pt_id < 30000  -- try for several  partitions
+and pt_id < 35000  -- try for several  partitions
 ;
 
 set echo off
 
 prompt .
 prompt the PT also has bitmap indexes..
-prompt but needs to scan mulitple-local bitmap-idex
+prompt in this case, only 1 bitmap per partitions (needs fix..)
+prompt but also note that it needs to scan MULITPLE-local bitmap-indexes
 prompt .
 
 host read -p "how is use of bitmap indexes on PT, multi-partition ?"
@@ -123,6 +128,7 @@ set echo on
 set echo off
 prompt .
 prompt And how much io was done on the PT
+prompt just to count 8 records ?
 prompt .
 
 host read -p "bitmap index on partitions of PT, how many blocks..."
@@ -131,8 +137,8 @@ prompt .
 prompt Bitmap-indexes are local, 
 prompt but typical use may cover many/all partitions. 
 prompt .
-prompt 1. CBO seems to use less of the bitmap-inxes (is solvable..)
-prompt 2. looping over partitions can (will) hurt performance...
+prompt 1. CBO seems to use less of the bitmap-indexes (is solvable..)
+prompt 2. but.. looping over partitions can (will) hurt performance.
 prompt .
-prompt note: I'd like a partial-global index here...?
+prompt note: I'd like something of a partial-global (bitmap-)index here...?
 prompt . 

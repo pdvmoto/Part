@@ -177,6 +177,7 @@ prompt
 prompt ____  original demo starts here... _____
 prompt 
 
+set autotrace off
 set echo on
 
 create table pt 

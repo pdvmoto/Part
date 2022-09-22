@@ -140,8 +140,17 @@ EXEC DBMS_STATS.gather_table_stats(user, 'PT_C', null, 1);
 EXEC DBMS_STATS.gather_table_stats(user, 'PT_CC', null, 1);
 EXEC DBMS_STATS.gather_table_stats(user, 'PT_CCC', null, 1);
 
+set echo off
+
+select table_name, partition_name part_name, num_rows
+from user_tab_partitions
+where table_name like 'PT%'
+order by table_name, partition_name ;
+
 set timing off
 set echo off
 
-echo Dont forget the T_ccc tables..
+prompt .. 
+prompt Dont forget the T_ccc tables..
+prompt .
 
